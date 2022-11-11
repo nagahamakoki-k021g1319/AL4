@@ -105,8 +105,11 @@ Object3d* Object3d::Create()
 	}
 
 	//スケールをセット
-	float scale_val = 10;
+	float scale_val = 5;
 	object3d->scale = { scale_val,scale_val,scale_val };
+
+	float trans_val = 30;
+	object3d->position = { trans_val,trans_val,trans_val };
 
 	return object3d;
 }
@@ -415,7 +418,6 @@ void Object3d::LoadTexture(const std::string& directoryPath, const std::string& 
 		&srvDesc, //テクスチャ設定情報
 		cpuDescHandleSRV
 	);
-
 }
 
 void Object3d::CreateModel()
@@ -493,7 +495,6 @@ void Object3d::CreateModel()
 			line_stream >> normal.z;
 			//座標データに追加
 			normals.emplace_back(normal);
-
 		}
 
 		//先頭文字列がfならポリゴン(三角形)
