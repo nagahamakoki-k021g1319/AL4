@@ -11,7 +11,7 @@ GameScene::~GameScene()
 {
 	delete spriteBG;
 	delete object3d;
-	delete model;
+	delete sampleobject3d;
 }
 
 void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
@@ -37,8 +37,9 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	object3d = Object3d::Create();
 	object3d->Update();
 
-	model = Model::Create();
-	model->Update();
+	// 3Dオブジェクト生成
+	sampleobject3d = SampleObject3d::Create();
+	sampleobject3d->Update();
 }
 
 void GameScene::Update()
@@ -100,10 +101,11 @@ void GameScene::Draw()
 #pragma region 3Dオブジェクト描画
 	// 3Dオブジェクト描画前処理
 	Object3d::PreDraw(cmdList);
-	Model::PreDraw(cmdList);
+	SampleObject3d::PreDraw(cmdList);
+
 	// 3Dオブクジェクトの描画
 	object3d->Draw();
-	model->Draw();
+	sampleobject3d->Draw();
 
 	/// <summary>
 	/// ここに3Dオブジェクトの描画処理を追加できる
@@ -111,7 +113,7 @@ void GameScene::Draw()
 
 	// 3Dオブジェクト描画後処理
 	Object3d::PostDraw();
-	Model::PostDraw();
+	SampleObject3d::PostDraw();
 
 #pragma endregion
 
