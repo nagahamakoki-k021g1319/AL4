@@ -6,7 +6,7 @@
 #include "Sprite.h"
 #include "Object3d.h"
 #include "DebugText.h"
-#include "Model.h"
+#include "SampleObject3d.h"
 
 /// <summary>
 /// ゲームシーン
@@ -62,6 +62,6 @@ private: // メンバ変数
 	/// </summary>
 	Sprite* spriteBG = nullptr;
 	Object3d* object3d = nullptr;
-	Model* model = nullptr;
+	SampleObject3d* sampleobject3d = nullptr;
 };
 
