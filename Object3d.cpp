@@ -105,7 +105,7 @@ Object3d* Object3d::Create(std::string fileName)
 	float scale_val = 2;
 	object3d->scale = { scale_val,scale_val,scale_val };
 
-	/*float trans_val = 30;
+	/*float trans_val = -10;
 	object3d->position = { trans_val,trans_val,trans_val };*/
 
 	CreateModel(fileName);
