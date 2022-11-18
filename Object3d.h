@@ -77,7 +77,7 @@ public: // 静的メンバ関数
 	/// 3Dオブジェクト生成
 	/// </summary>
 	/// <returns></returns>
-	static Object3d* Create();
+	static Object3d* Create(std::string fileName);
 
 	/// <summary>
 	/// 視点座標の取得
@@ -183,7 +183,7 @@ private:// 静的メンバ関数
 	/// <summary>
 	/// モデル作成
 	/// </summary>
-	static void CreateModel();
+	static void CreateModel(std::string fileName);
 
 
 	/// <summary>
@@ -225,7 +225,7 @@ private: // メンバ変数
 
 	ComPtr<ID3D12Resource> constBuffB0; // 定数バッファ
 	ComPtr<ID3D12Resource> constBuffB1; // 定数バッファ
-	
+
 	// 色
 	XMFLOAT4 color = { 1,1,1,1 };
 	// ローカルスケール
