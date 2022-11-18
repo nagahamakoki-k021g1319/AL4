@@ -38,16 +38,18 @@ void GameScene::Initialize(DirectXCommon* dxCommon, Input* input)
 	// 3Dオブジェクト生成
 	object3d = Object3d::Create("as");
 	object3d->Update();
-	object3d->SetPosition({ 20,0,0 });
+	object3d->SetPosition({ 20,10,0 });
+	object3d->Update();
 
 	object3d_1 = Object3d::Create("as2");
 	object3d_1->Update();
-	object3d_1->SetPosition({ 20,0,0 });
-
+	object3d_1->SetPosition({ 20,-10,0 });
+	object3d_1->Update();
 
 	// 3Dオブジェクト生成
 	sampleobject3d = SampleObject3d::Create();
 	sampleobject3d->Update();
+
 }
 
 void GameScene::Update()
