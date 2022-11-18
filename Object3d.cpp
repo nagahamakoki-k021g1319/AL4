@@ -62,9 +62,6 @@ void Object3d::StaticInitialize(ID3D12Device* device, int window_width, int wind
 	//// テクスチャ読み込み
 	//LoadTexture();
 
-	// モデル生成
-	CreateModel();
-
 }
 
 void Object3d::PreDraw(ID3D12GraphicsCommandList* cmdList)
@@ -89,7 +86,7 @@ void Object3d::PostDraw()
 	Object3d::cmdList = nullptr;
 }
 
-Object3d* Object3d::Create()
+Object3d* Object3d::Create(std::string fileName)
 {
 	// 3Dオブジェクトのインスタンスを生成
 	Object3d* object3d = new Object3d();
@@ -104,12 +101,14 @@ Object3d* Object3d::Create()
 		return nullptr;
 	}
 
-	//スケールをセット
-	float scale_val = 5;
-	object3d->scale = { scale_val,scale_val,scale_val };
+	////スケールをセット
+	//float scale_val = 5;
+	//object3d->scale = { scale_val,scale_val,scale_val };
 
-	float trans_val = 30;
-	object3d->position = { trans_val,trans_val,trans_val };
+	//float trans_val = 30;
+	//object3d->position = { trans_val,trans_val,trans_val };
+
+	CreateModel(fileName);
 
 	return object3d;
 }
@@ -312,7 +311,7 @@ void Object3d::InitializeGraphicsPipeline()
 	rootparams[1].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);*/
 	CD3DX12_ROOT_PARAMETER rootparams[3];
 	rootparams[0].InitAsConstantBufferView(0, 0, D3D12_SHADER_VISIBILITY_ALL);
-	rootparams[1].InitAsConstantBufferView(1,0, D3D12_SHADER_VISIBILITY_ALL);
+	rootparams[1].InitAsConstantBufferView(1, 0, D3D12_SHADER_VISIBILITY_ALL);
 	rootparams[2].InitAsDescriptorTable(1, &descRangeSRV, D3D12_SHADER_VISIBILITY_ALL);
 
 	// スタティックサンプラー
@@ -343,7 +342,7 @@ void Object3d::LoadTexture(const std::string& directoryPath, const std::string& 
 
 	TexMetadata metadata{};
 	ScratchImage scratchImg{};
-	
+
 	//ファイルパスを結合
 	string filepath = directoryPath + filename;
 
@@ -356,8 +355,8 @@ void Object3d::LoadTexture(const std::string& directoryPath, const std::string& 
 	//assert(SUCCEEDED(result));
 
 	result = LoadFromWICFile(
-			wfilepath, WIC_FLAGS_NONE,
-			&metadata,scratchImg
+		wfilepath, WIC_FLAGS_NONE,
+		&metadata, scratchImg
 	);
 
 	ScratchImage mipChain{};
@@ -420,7 +419,7 @@ void Object3d::LoadTexture(const std::string& directoryPath, const std::string& 
 	);
 }
 
-void Object3d::CreateModel()
+void Object3d::CreateModel(std::string fileName)
 {
 	HRESULT result = S_FALSE;
 
@@ -428,7 +427,7 @@ void Object3d::CreateModel()
 	std::ifstream file;
 	// .objファイルを開く
 	/*file.open("Resources/triangle2/triangle2.obj");*/
-	const string modelname = "as"; //triangle_mat
+	const string modelname = fileName; //triangle_mat
 	const string filename = modelname + ".obj"; //triangle_mat.obj
 	const string directoryPath = "Resources/" + modelname + "/"; //Resources/triangle_mat/
 	file.open(directoryPath + filename); //Resources/triangle_mat/triangle_mat.obj
@@ -483,7 +482,7 @@ void Object3d::CreateModel()
 			texcoord.y = 1.0f - texcoord.y;
 			//座標データに追加
 			texcoords.emplace_back(texcoord);
-			
+
 		}
 
 		//先頭文字列がvnなら法線ベクトル
@@ -504,7 +503,7 @@ void Object3d::CreateModel()
 			while (getline(line_stream, index_string, ' ')) {
 				//頂点インデックス1個分の文字列をストリームに変換して解析しやすくなる
 				std::istringstream index_stream(index_string);
-				unsigned short indexPosition,indexTexcoord,indexNormal;
+				unsigned short indexPosition, indexTexcoord, indexNormal;
 				index_stream >> indexPosition;
 				index_stream.seekg(1, ios_base::cur); //スラッシュを飛ばす
 				index_stream >> indexTexcoord;
@@ -519,7 +518,7 @@ void Object3d::CreateModel()
 				//インデックスデータの追加
 				indices.emplace_back((unsigned short)indices.size());
 			}
-		
+
 		}
 	}
 
@@ -586,7 +585,7 @@ void Object3d::CreateModel()
 
 		indexBuff->Unmap(0, nullptr);
 	}
-	
+
 	// インデックスバッファビューの作成
 	ibView.BufferLocation = indexBuff->GetGPUVirtualAddress();
 	ibView.Format = DXGI_FORMAT_R16_UINT;
@@ -601,7 +600,7 @@ void Object3d::LoadMaterial(const std::string& directoryPath, const std::string&
 	//マテリアルファイルを開く
 	file.open(directoryPath + filename);
 	//ファイルオープン失敗をチェック
-	if (file.fail()){
+	if (file.fail()) {
 		assert(0);
 	}
 
@@ -678,10 +677,10 @@ bool Object3d::Initialize()
 	// 定数バッファの生成
 	result = device->CreateCommittedResource(
 		&heapProps, // アップロード可能
-		D3D12_HEAP_FLAG_NONE, 
-		&resourceDesc, 
-		D3D12_RESOURCE_STATE_GENERIC_READ, 
-	nullptr,
+		D3D12_HEAP_FLAG_NONE,
+		&resourceDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
 		IID_PPV_ARGS(&constBuffB0));
 	assert(SUCCEEDED(result));
 
